@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="修改数组、预测输出，逐步观察 C 语言中的数组、指针和内存。">
+  <meta name="theme-color" content="#f3f6f5">
+  <title>C 指针实验室</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.mjs"></script>
+</head>
+<body>
+  <a class="skip-link" href="#workspace">跳到练习</a>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">&gt;_</span><span>C 指针实验室</span></div>
+      <div class="progress" aria-label="练习进度">
+        <span>练习进度</span>
+        <div class="progress-track" id="progress-track" role="progressbar" aria-label="已答对的练习" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0"><i></i><i></i><i></i><i></i></div>
+        <strong id="progress-text">0 / 4</strong>
+      </div>
+    </div>
+  </header>
+  <main class="shell">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="hero-label"><span aria-hidden="true"></span> C 语言 · 交互练习</p>
+        <h1 id="hero-title">看见指针如何工作<span>.</span></h1>
+        <p>改一改数组，猜一猜输出，再逐行观察内存发生了什么。</p>
+      </div>
+      <div class="hero-memory" aria-hidden="true">
+        <div class="hero-pointer"><span>p</span><b>0x1000</b></div>
+        <div class="hero-wire"></div>
+        <div class="hero-registers">
+          <div class="hero-register hot"><span>arr[0]</span><strong>10</strong><small>0x1000</small></div>
+          <div class="hero-register"><span>arr[1]</span><strong>20</strong><small>0x1004</small></div>
+          <div class="hero-register"><span>arr[2]</span><strong>30</strong><small>0x1008</small></div>
+        </div>
+      </div>
+    </section>
+
+    <nav class="lessons" aria-label="题目">
+      <div class="lesson-tabs" id="lesson-tabs" role="tablist" aria-label="练习题"></div>
+    </nav>
+
+    <section id="workspace" role="tabpanel" tabindex="0">
+      <div class="exercise-head">
+        <div>
+          <h2 id="exercise-title"></h2>
+          <p id="exercise-prompt"></p>
+        </div>
+        <div class="environment" id="environment"></div>
+      </div>
+
+      <div class="workbench">
+        <section class="code-card" aria-labelledby="code-title">
+          <header class="editor-head">
+            <h3 id="code-title"><span class="file-icon" aria-hidden="true">C</span> main.c</h3>
+            <span class="step-label" id="step-label">待运行</span>
+          </header>
+          <div class="editor-scroll" tabindex="0" aria-label="C 语言代码">
+            <ol id="code-lines"></ol>
+          </div>
+          <div class="editor-foot">
+            <div class="controls">
+              <button type="button" class="button button-primary" id="next-step"><span aria-hidden="true">▸</span> 单步执行</button>
+              <button type="button" class="button" id="previous-step">上一步</button>
+              <button type="button" class="button" id="run-all">运行全部</button>
+              <button type="button" class="button button-quiet" id="reset-run">重置</button>
+            </div>
+            <p class="step-note" id="step-note" role="status"></p>
+          </div>
+        </section>
+
+        <div class="workbench-side">
+          <section class="card memory-card" aria-labelledby="memory-title">
+            <header class="card-head">
+              <h3 id="memory-title"><span class="section-icon memory-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>内存视图</h3>
+              <span class="subtle" id="memory-scope"></span>
+            </header>
+            <div id="memory-cells" class="memory-cells"></div>
+            <div id="memory-relation" class="memory-relation"></div>
+          </section>
+
+          <section class="card config-card" aria-labelledby="config-title">
+            <header class="card-head">
+              <h3 id="config-title"><span class="section-icon controls-icon" aria-hidden="true"><i></i><i></i><i></i></span>实验参数</h3>
+              <button type="button" class="text-button" id="defaults">恢复默认</button>
+            </header>
+            <div id="config"></div>
+            <p id="config-error" class="error" role="alert" hidden></p>
+          </section>
+        </div>
+      </div>
+
+      <div class="results-grid">
+        <section class="card predict-card" aria-labelledby="prediction-title">
+          <header class="card-head">
+            <h3 id="prediction-title"><span class="section-icon prediction-icon" aria-hidden="true">?</span>预测输出</h3>
+          </header>
+          <label class="prediction-label" for="prediction">把预计的数字按顺序写下，每行一个。预计无输出时留空。</label>
+          <textarea id="prediction" rows="3" spellcheck="false" autocapitalize="off" placeholder="在这里输入你的预测"></textarea>
+          <div class="predict-actions">
+            <label id="count-label" class="count-label" hidden>预计打印次数 <input type="number" id="prediction-count" min="0" max="6" step="1" inputmode="numeric"></label>
+            <button type="button" class="button button-primary" id="check">核对答案</button>
+          </div>
+          <p id="feedback" class="feedback" role="status" hidden></p>
+        </section>
+
+        <section class="console-card" aria-labelledby="console-title">
+          <header class="editor-head console-head">
+            <h3 id="console-title"><span class="console-icon" aria-hidden="true">&gt;_</span> 程序输出</h3>
+            <span class="step-label" id="output-count">0 次 printf</span>
+          </header>
+          <div class="console-body">
+            <pre id="output" aria-label="程序输出"></pre>
+            <p id="output-empty" class="empty-output">等待运行…</p>
+            <p id="program-error" class="runtime-error" role="status" hidden></p>
+          </div>
+        </section>
+      </div>
+
+      <details class="card explanation" id="explanation">
+        <summary>查看解题思路</summary>
+        <div id="explanation-body"></div>
+      </details>
+    </section>
+    <footer>预设 C 例题在浏览器中模拟运行。内存地址为示意值，字节数按所选环境计算。</footer>
+  </main>
+</body>
+</html>
